@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Coffee, Menu, X, ArrowRight, User, Shield } from "lucide-react";
+import { Coffee, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SignOutButton } from "@/components/auth/SignOutButton";
+import { UserDropdown } from "@/components/shared/UserDropdown";
 
 export function Header() {
   const { data: session } = useSession();
@@ -46,22 +46,10 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Desktop Actions based on NextAuth Session */}
+        {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-3">
           {session?.user ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-coffee-border hover:border-coffee-accent text-coffee-dark font-bold text-xs transition-all shadow-sm"
-              >
-                <User className="w-3.5 h-3.5 text-coffee-accent" />
-                <span className="max-w-[120px] truncate">{session.user.name || session.user.email}</span>
-                <span className="bg-coffee-dark text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                  {session.user.role === "ADMIN" ? "Admin" : "Dashboard"}
-                </span>
-              </Link>
-              <SignOutButton />
-            </div>
+            <UserDropdown user={session.user} />
           ) : (
             <div className="flex items-center gap-3">
               <Link href="/login">
@@ -109,18 +97,17 @@ export function Header() {
           <div className="pt-2 flex flex-col gap-3">
             {session?.user ? (
               <div className="space-y-2">
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-between p-3 rounded-2xl bg-white border border-coffee-border text-sm font-bold text-coffee-dark"
-                >
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-coffee-accent" />
-                    <span>{session.user.name}</span>
-                  </div>
-                  <span className="text-xs text-coffee-accent">Ke Dashboard &rarr;</span>
-                </Link>
-                <SignOutButton />
+                <div className="p-3 bg-white rounded-2xl border border-coffee-border">
+                  <span className="font-bold text-sm text-coffee-dark block">{session.user.name}</span>
+                  <span className="text-xs text-coffee-muted block mb-2">{session.user.email}</span>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-xs font-bold text-coffee-accent hover:underline"
+                  >
+                    Ke Dashboard Learner &rarr;
+                  </Link>
+                </div>
               </div>
             ) : (
               <>
