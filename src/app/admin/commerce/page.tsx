@@ -2,6 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/modules/auth/guards";
+import { db } from "@/db/client";
+import { users, memberships } from "@/db/schema";
+import { eq, and, gt } from "drizzle-orm";
 import { CreditCard, ArrowLeft, ShieldCheck, Sparkles, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminOverrideButton } from "@/components/admin/AdminOverrideButton";
@@ -12,11 +15,30 @@ export default async function AdminCommercePage() {
     redirect("/login?callbackUrl=/admin/commerce");
   }
 
-  const demoStudents = [
-    { id: "usr-free-1", email: "student-free@example.com", name: "Budi (Free Student)", status: "FREE" },
-    { id: "usr-active-1", email: "student-active@example.com", name: "Siti (Active Premium)", status: "ACTIVE" },
-    { id: "usr-exp-1", email: "student-expired@example.com", name: "Rudi (Expired Premium)", status: "EXPIRED" },
-  ];
+  // Fetch real users from Neon PostgreSQL
+  const dbUsers = await db.query.users.findMany();
+  const now = new Date();
+
+  const studentList = await Promise.all(
+    dbUsers
+      .filter((u) => u.role === "STUDENT")
+      .map(async (u) => {
+        const activeMembership = await db.query.memberships.findFirst({
+          where: and(
+            eq(memberships.userId, u.id),
+            eq(memberships.status, "ACTIVE"),
+            gt(memberships.endsAt, now)
+          ),
+        });
+
+        return {
+          id: u.id,
+          email: u.email,
+          name: u.name || u.email,
+          status: activeMembership ? "ACTIVE" : "FREE",
+        };
+      })
+  );
 
   return (
     <div className="min-h-screen bg-coffee-cream py-10 px-4 sm:px-6">
@@ -52,7 +74,7 @@ export default async function AdminCommercePage() {
             </h2>
 
             <div className="space-y-3">
-              {demoStudents.map((st) => (
+              {studentList.map((st) => (
                 <div
                   key={st.id}
                   className="p-5 rounded-2xl bg-coffee-cream border border-coffee-border flex flex-col sm:flex-row sm:items-center justify-between gap-4"

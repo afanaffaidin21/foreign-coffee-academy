@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { requireAdmin, requireMutableAccount } from "@/modules/auth/guards";
 import { db } from "@/db/client";
-import { memberships, membershipPlans, adminAuditLogs } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { users, memberships, membershipPlans, adminAuditLogs } from "@/db/schema";
+import { eq, or } from "drizzle-orm";
 import { z } from "zod";
 
 const overrideSchema = z.object({
-  userId: z.string(),
+  userId: z.string().optional(),
+  email: z.string().optional(),
   durationDays: z.number().default(30),
 });
 
@@ -37,7 +38,19 @@ export async function POST(req: Request) {
       );
     }
 
-    const { userId, durationDays } = parsed.data;
+    const { userId, email, durationDays } = parsed.data;
+
+    // Find target user in DB by ID or Email
+    const targetUser = await db.query.users.findFirst({
+      where: userId ? eq(users.id, userId) : email ? eq(users.email, email) : undefined,
+    });
+
+    if (!targetUser) {
+      return NextResponse.json(
+        { ok: false, error: { code: "NOT_FOUND", message: "Pengguna tidak ditemukan di database." } },
+        { status: 404 }
+      );
+    }
 
     // Get Monthly plan ID
     const plan = await db.query.membershipPlans.findFirst({
@@ -48,9 +61,9 @@ export async function POST(req: Request) {
     const now = new Date();
     const endsAt = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
 
-    // Reliable application-level upsert for membership
+    // Application-level upsert for membership
     const existingMembership = await db.query.memberships.findFirst({
-      where: eq(memberships.userId, userId),
+      where: eq(memberships.userId, targetUser.id),
     });
 
     if (existingMembership) {
@@ -66,7 +79,7 @@ export async function POST(req: Request) {
         .where(eq(memberships.id, existingMembership.id));
     } else {
       await db.insert(memberships).values({
-        userId,
+        userId: targetUser.id,
         planId,
         status: "ACTIVE",
         startsAt: now,
@@ -79,13 +92,13 @@ export async function POST(req: Request) {
       adminUserId: adminRes.data.id,
       action: "MANUAL_MEMBERSHIP_OVERRIDE",
       targetType: "USER",
-      targetId: userId,
-      payloadJson: JSON.stringify({ durationDays, endsAt }),
+      targetId: targetUser.id,
+      payloadJson: JSON.stringify({ email: targetUser.email, durationDays, endsAt }),
     });
 
     return NextResponse.json({
       ok: true,
-      message: `Berhasil memberikan hak akses ${durationDays} Hari Premium ke user ${userId}`,
+      message: `Berhasil memberikan hak akses ${durationDays} Hari Premium ke ${targetUser.email}`,
     });
   } catch (error) {
     console.error("Admin Override Membership Error:", error);
