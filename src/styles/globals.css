@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 38 33% 97%; /* #FAF7F2 */
+    --foreground: 20 18% 10%; /* #1E1815 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 18% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 18% 10%;
+
+    --primary: 32 86% 37%; /* #B45309 Warm Coffee */
+    --primary-foreground: 38 33% 97%;
+
+    --secondary: 38 30% 92%; /* #F3EDE2 */
+    --secondary-foreground: 20 18% 10%;
+
+    --muted: 38 20% 90%;
+    --muted-foreground: 25 10% 40%; /* #6C635B */
+
+    --accent: 38 80% 44%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 14 80% 40%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 38 24% 84%; /* #E6DFD3 */
+    --input: 38 24% 84%;
+    --ring: 32 86% 37%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-coffee-cream text-coffee-dark font-sans antialiased selection:bg-coffee-accent selection:text-white;
+  }
+}
+
+/* Custom Playful Micro-Interactions */
+.bento-card {
+  @apply bg-coffee-foam border border-coffee-light rounded-3xl p-6 transition-all duration-300 hover:shadow-bento-hover hover:-translate-y-1;
+}
+
+.badge-playful {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+}
