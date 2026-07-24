@@ -70,26 +70,31 @@ export async function POST(req: Request) {
         const now = new Date();
         const endsAt = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
 
-        // Upsert user membership
-        await db
-          .insert(memberships)
-          .values({
-            userId: transaction.userId,
-            planId: transaction.planId,
-            status: "ACTIVE",
-            startsAt: now,
-            endsAt,
-          })
-          .onConflictDoUpdate({
-            target: memberships.userId,
-            set: {
+        // Application-level upsert user membership
+        const existingMembership = await db.query.memberships.findFirst({
+          where: eq(memberships.userId, transaction.userId),
+        });
+
+        if (existingMembership) {
+          await db
+            .update(memberships)
+            .set({
               status: "ACTIVE",
               planId: transaction.planId,
               startsAt: now,
               endsAt,
               updatedAt: now,
-            },
+            })
+            .where(eq(memberships.id, existingMembership.id));
+        } else {
+          await db.insert(memberships).values({
+            userId: transaction.userId,
+            planId: transaction.planId,
+            status: "ACTIVE",
+            startsAt: now,
+            endsAt,
           });
+        }
 
         // Mark entitlement as applied
         await db

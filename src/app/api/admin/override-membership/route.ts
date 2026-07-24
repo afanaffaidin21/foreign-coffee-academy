@@ -44,28 +44,35 @@ export async function POST(req: Request) {
       where: eq(membershipPlans.slug, "monthly"),
     });
 
+    const planId = plan?.id || "plan-monthly-1";
     const now = new Date();
     const endsAt = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
 
-    // Upsert membership
-    await db
-      .insert(memberships)
-      .values({
-        userId,
-        planId: plan?.id || "plan-monthly-1",
-        status: "ACTIVE",
-        startsAt: now,
-        endsAt,
-      })
-      .onConflictDoUpdate({
-        target: memberships.userId,
-        set: {
+    // Reliable application-level upsert for membership
+    const existingMembership = await db.query.memberships.findFirst({
+      where: eq(memberships.userId, userId),
+    });
+
+    if (existingMembership) {
+      await db
+        .update(memberships)
+        .set({
           status: "ACTIVE",
+          planId,
           startsAt: now,
           endsAt,
           updatedAt: now,
-        },
+        })
+        .where(eq(memberships.id, existingMembership.id));
+    } else {
+      await db.insert(memberships).values({
+        userId,
+        planId,
+        status: "ACTIVE",
+        startsAt: now,
+        endsAt,
       });
+    }
 
     // Record audit log
     await db.insert(adminAuditLogs).values({
