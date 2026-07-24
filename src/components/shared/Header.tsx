@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Coffee, Menu, X, ArrowRight } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Coffee, Menu, X, ArrowRight, User, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 
 export function Header() {
+  const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -43,19 +46,37 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Desktop Actions */}
+        {/* Desktop Actions based on NextAuth Session */}
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="text-coffee-dark font-semibold">
-              Masuk
-            </Button>
-          </Link>
-          <Link href="/courses">
-            <Button size="sm" className="bg-coffee-dark text-coffee-cream hover:bg-coffee-accent shadow-sm">
-              <span>Mulai Belajar</span>
-              <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
-          </Link>
+          {session?.user ? (
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-coffee-border hover:border-coffee-accent text-coffee-dark font-bold text-xs transition-all shadow-sm"
+              >
+                <User className="w-3.5 h-3.5 text-coffee-accent" />
+                <span className="max-w-[120px] truncate">{session.user.name || session.user.email}</span>
+                <span className="bg-coffee-dark text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                  {session.user.role === "ADMIN" ? "Admin" : "Dashboard"}
+                </span>
+              </Link>
+              <SignOutButton />
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link href="/login">
+                <Button variant="ghost" size="sm" className="text-coffee-dark font-semibold rounded-full">
+                  Masuk
+                </Button>
+              </Link>
+              <Link href="/courses">
+                <Button size="sm" className="bg-coffee-dark text-white hover:bg-coffee-accent rounded-full px-5 font-bold shadow-sm">
+                  <span>Mulai Belajar</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Toggle Button */}
@@ -84,17 +105,37 @@ export function Header() {
               </Link>
             ))}
           </nav>
+
           <div className="pt-2 flex flex-col gap-3">
-            <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="outline" className="w-full justify-center">
-                Masuk
-              </Button>
-            </Link>
-            <Link href="/courses" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="w-full justify-center bg-coffee-accent text-white">
-                Mulai Belajar
-              </Button>
-            </Link>
+            {session?.user ? (
+              <div className="space-y-2">
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-between p-3 rounded-2xl bg-white border border-coffee-border text-sm font-bold text-coffee-dark"
+                >
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-coffee-accent" />
+                    <span>{session.user.name}</span>
+                  </div>
+                  <span className="text-xs text-coffee-accent">Ke Dashboard &rarr;</span>
+                </Link>
+                <SignOutButton />
+              </div>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-center rounded-full font-bold">
+                    Masuk
+                  </Button>
+                </Link>
+                <Link href="/courses" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full justify-center bg-coffee-dark text-white rounded-full font-bold">
+                    Mulai Belajar
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

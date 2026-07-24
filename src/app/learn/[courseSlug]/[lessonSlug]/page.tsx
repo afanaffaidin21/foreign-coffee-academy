@@ -6,7 +6,7 @@ import { authOptions } from "@/modules/auth/config";
 import { requirePremiumEntitlement } from "@/modules/auth/guards";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
-import { Play, Lock, Sparkles, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
+import { Play, Lock, Unlock, Sparkles, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CompleteLessonButton } from "@/components/learning/CompleteLessonButton";
 
@@ -65,7 +65,7 @@ export default async function LessonViewerPage({
       isFree: true,
       youtubeVideoId: "dQw4w9WgXcQ",
       description:
-        "Mengenali bentuk fisik, ketinggian tanam, kadar kafein, dan профиль aroma biji kopi.",
+        "Mengenali bentuk fisik, ketinggian tanam, kadar kafein, dan profil aroma biji kopi.",
       siblingLessons: [
         {
           slug: "pengenalan-ekstraksi-kopi",
@@ -131,12 +131,13 @@ export default async function LessonViewerPage({
   };
 
   // Check Paywall Access Rules
-  let hasAccess = lesson.isFree;
-
-  if (!hasAccess && session?.user?.id) {
+  let isPremiumUser = false;
+  if (session?.user?.id) {
     const entitlementRes = await requirePremiumEntitlement(session.user.id);
-    hasAccess = entitlementRes.ok;
+    isPremiumUser = entitlementRes.ok;
   }
+
+  const hasAccess = lesson.isFree || isPremiumUser;
 
   return (
     <div className="min-h-screen bg-coffee-cream flex flex-col justify-between">
@@ -233,28 +234,37 @@ export default async function LessonViewerPage({
               </h3>
 
               <div className="space-y-2.5">
-                {lesson.siblingLessons.map((sib) => (
-                  <Link
-                    key={sib.slug}
-                    href={`/learn/${params.courseSlug}/${sib.slug}`}
-                    className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-bold transition-all ${
-                      sib.slug === params.lessonSlug
-                        ? "bg-coffee-dark text-white border-coffee-dark shadow-sm"
-                        : "bg-coffee-cream text-coffee-dark border-coffee-border hover:bg-coffee-card"
-                    }`}
-                  >
-                    <span className="truncate max-w-[200px]">{sib.title}</span>
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                        sib.isFree
-                          ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                          : "bg-amber-100 text-amber-900 border-amber-200"
+                {lesson.siblingLessons.map((sib) => {
+                  const sibHasAccess = sib.isFree || isPremiumUser;
+
+                  return (
+                    <Link
+                      key={sib.slug}
+                      href={`/learn/${params.courseSlug}/${sib.slug}`}
+                      className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-bold transition-all ${
+                        sib.slug === params.lessonSlug
+                          ? "bg-coffee-dark text-white border-coffee-dark shadow-sm"
+                          : "bg-coffee-cream text-coffee-dark border-coffee-border hover:bg-coffee-card"
                       }`}
                     >
-                      {sib.isFree ? "Free" : "Lock"}
-                    </span>
-                  </Link>
-                ))}
+                      <span className="truncate max-w-[180px]">{sib.title}</span>
+
+                      {sib.isFree ? (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-200">
+                          Free
+                        </span>
+                      ) : isPremiumUser ? (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-amber-100 text-amber-900 border-amber-300 flex items-center gap-1">
+                          <Unlock className="w-3 h-3 text-amber-700" /> Premium
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-stone-200 text-stone-700 border-stone-300 flex items-center gap-1">
+                          <Lock className="w-3 h-3" /> Lock
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

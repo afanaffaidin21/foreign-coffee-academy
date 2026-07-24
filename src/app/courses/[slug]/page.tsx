@@ -1,12 +1,23 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/modules/auth/config";
+import { requirePremiumEntitlement } from "@/modules/auth/guards";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
-import { CheckCircle2, Play, Lock, Sparkles, Layers, Clock, ArrowRight, User } from "lucide-react";
+import { CheckCircle2, Play, Lock, Unlock, Clock, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function CourseDetailPage({ params }: { params: { slug: string } }) {
+export default async function CourseDetailPage({ params }: { params: { slug: string } }) {
+  const session = await getServerSession(authOptions);
+
+  let isPremiumUser = false;
+  if (session?.user?.id) {
+    const entitlementRes = await requirePremiumEntitlement(session.user.id);
+    isPremiumUser = entitlementRes.ok;
+  }
+
   const courseMap: Record<
     string,
     {
@@ -115,7 +126,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
       level: "Pemula",
       duration: "2 Jam",
       description:
-        "Teknik menyeduh manual brew menggunakan V60, Kalita Wave, dan Aeropress untuk kejernihan rasa maksimal.",
+        "Teknik menyeduh manual brew menggunakan alat populer seperti Hario V60, Kalita Wave, dan Aeropress.",
       instructor: "Foreign Coffee Team",
       outcomes: [
         "Kuasai metode pour-over 4:6 dan teknik blooming",
@@ -213,45 +224,53 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                   </h3>
 
                   <div className="space-y-3">
-                    {mod.lessons.map((lesson) => (
-                      <Link
-                        key={lesson.slug}
-                        href={`/learn/${params.slug}/${lesson.slug}`}
-                        className="flex items-center justify-between p-3.5 rounded-2xl bg-coffee-cream hover:bg-coffee-card border border-coffee-border transition-all group"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                              lesson.isFree
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-coffee-dark text-white"
-                            }`}
-                          >
-                            {lesson.isFree ? (
-                              <Play className="w-4 h-4 fill-emerald-800 text-emerald-800" />
-                            ) : (
-                              <Lock className="w-4 h-4" />
-                            )}
-                          </div>
-                          <div>
-                            <span className="font-bold text-sm text-coffee-dark group-hover:text-coffee-accent transition-colors block">
-                              {lesson.title}
-                            </span>
-                            <span className="text-xs text-coffee-muted">{lesson.duration}</span>
-                          </div>
-                        </div>
+                    {mod.lessons.map((lesson) => {
+                      const hasAccess = lesson.isFree || isPremiumUser;
 
-                        <span
-                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${
-                            lesson.isFree
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                              : "bg-amber-50 text-amber-900 border-amber-200"
-                          }`}
+                      return (
+                        <Link
+                          key={lesson.slug}
+                          href={`/learn/${params.slug}/${lesson.slug}`}
+                          className="flex items-center justify-between p-3.5 rounded-2xl bg-coffee-cream hover:bg-coffee-card border border-coffee-border transition-all group"
                         >
-                          {lesson.isFree ? "Gratis" : "Premium"}
-                        </span>
-                      </Link>
-                    ))}
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                                hasAccess
+                                  ? "bg-emerald-100 text-emerald-800"
+                                  : "bg-coffee-dark text-white"
+                              }`}
+                            >
+                              {hasAccess ? (
+                                <Play className="w-4 h-4 fill-emerald-800 text-emerald-800" />
+                              ) : (
+                                <Lock className="w-4 h-4" />
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-bold text-sm text-coffee-dark group-hover:text-coffee-accent transition-colors block">
+                                {lesson.title}
+                              </span>
+                              <span className="text-xs text-coffee-muted">{lesson.duration}</span>
+                            </div>
+                          </div>
+
+                          {lesson.isFree ? (
+                            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200">
+                              Gratis
+                            </span>
+                          ) : isPremiumUser ? (
+                            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border bg-amber-50 text-amber-900 border-amber-300 flex items-center gap-1">
+                              <Unlock className="w-3 h-3 text-amber-700" /> Premium Unlocked
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border bg-stone-200 text-stone-700 border-stone-300 flex items-center gap-1">
+                              <Lock className="w-3 h-3" /> Premium
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
