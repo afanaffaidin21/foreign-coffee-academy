@@ -1,10 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/modules/auth/config";
 import { requirePremiumEntitlement } from "@/modules/auth/guards";
-import { Coffee, User, Sparkles, Shield, PlayCircle, Layers, CheckCircle2, ArrowRight, BookOpen } from "lucide-react";
+import { User, Sparkles, Shield, PlayCircle, Layers, CheckCircle2, ArrowRight, BookOpen } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 
 export default async function DashboardPage() {
@@ -52,13 +53,15 @@ export default async function DashboardPage() {
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Header Navigation */}
         <div className="flex items-center justify-between bg-white border border-coffee-border p-6 rounded-3xl shadow-sm">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-coffee-accent flex items-center justify-center text-white font-bold">
-              <Coffee className="w-5 h-5" />
-            </div>
-            <span className="font-bold text-xl text-coffee-dark">
-              foreign coffee academy
-            </span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/foreign-coffee-academy-playful-logo.png"
+              alt="Foreign Coffee Academy"
+              width={180}
+              height={44}
+              className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+              priority
+            />
           </Link>
 
           <div className="flex items-center gap-4">

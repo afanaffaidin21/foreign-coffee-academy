@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Coffee, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
@@ -31,12 +32,14 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-coffee-cream flex flex-col justify-between py-12 px-4 sm:px-6">
       <div className="max-w-md w-full mx-auto text-center">
         <Link href="/" className="inline-flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-2xl bg-coffee-accent flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
-            <Coffee className="w-6 h-6" />
-          </div>
-          <span className="font-bold text-2xl tracking-tight text-coffee-dark">
-            foreign coffee academy
-          </span>
+          <Image
+            src="/foreign-coffee-academy-playful-logo.png"
+            alt="Foreign Coffee Academy"
+            width={200}
+            height={48}
+            className="h-11 w-auto object-contain transition-transform group-hover:scale-105"
+            priority
+          />
         </Link>
       </div>
 

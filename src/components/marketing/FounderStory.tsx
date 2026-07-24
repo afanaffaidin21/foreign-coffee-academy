@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { Coffee, HeartHandshake, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { HeartHandshake, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -42,15 +43,16 @@ export function FounderStory() {
               </div>
             </div>
 
-            {/* Neutral Brand Placeholder Visual (No fake human stock photo) */}
-            <div className="lg:col-span-4 flex flex-col items-center justify-center p-8 bg-coffee-cream rounded-3xl border border-coffee-light text-center space-y-3 shadow-inner">
-              <div className="w-20 h-20 rounded-3xl bg-coffee-accent text-white flex items-center justify-center shadow-md">
-                <Coffee className="w-10 h-10" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-xl text-coffee-dark mb-1">Foreign Coffee</h3>
-                <p className="text-xs text-coffee-muted font-medium">Practical Coffee Learning Companion</p>
-              </div>
+            {/* Neutral Brand Logo Visual */}
+            <div className="lg:col-span-4 flex flex-col items-center justify-center p-8 bg-coffee-cream rounded-3xl border border-coffee-light text-center space-y-4 shadow-inner">
+              <Image
+                src="/foreign-coffee-academy-playful-logo.png"
+                alt="Foreign Coffee Academy Logo"
+                width={200}
+                height={50}
+                className="h-12 w-auto object-contain"
+              />
+              <p className="text-xs text-coffee-muted font-medium">Practical Coffee Learning Companion</p>
             </div>
           </div>
         </div>

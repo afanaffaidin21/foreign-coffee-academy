@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Foreign Coffee Academy — Belajar Kopi Terstruktur & Menyenangkan",
   description:
     "Platform belajar kopi berbahasa Indonesia untuk home brewer dan barista pemula melalui course, Coffee Guide, dan recipe yang saling terhubung.",
+  icons: {
+    icon: "/favicon-foreign.png",
+  },
 };
 
 export default function RootLayout({

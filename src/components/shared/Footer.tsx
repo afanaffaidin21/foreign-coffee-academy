@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Coffee } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -10,12 +10,13 @@ export function Footer() {
           {/* Brand Col */}
           <div className="md:col-span-5 space-y-4">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-2xl bg-coffee-accent flex items-center justify-center text-white">
-                <Coffee className="w-4 h-4" />
-              </div>
-              <span className="font-bold text-lg text-coffee-dark">
-                foreign coffee academy
-              </span>
+              <Image
+                src="/foreign-coffee-academy-playful-logo.png"
+                alt="Foreign Coffee Academy"
+                width={180}
+                height={44}
+                className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+              />
             </Link>
             <p className="text-xs sm:text-sm text-coffee-muted leading-relaxed max-w-sm">
               Platform belajar kopi berbahasa Indonesia yang menghubungkan teori, praktik, dan pengalaman coffee shop nyata.

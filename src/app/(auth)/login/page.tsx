@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Coffee, Sparkles, UserCheck, Shield, Clock, ArrowRight } from "lucide-react";
@@ -213,12 +214,14 @@ export default function LoginPage() {
       {/* Header Brand */}
       <div className="max-w-md w-full mx-auto text-center">
         <Link href="/" className="inline-flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-2xl bg-coffee-accent flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
-            <Coffee className="w-6 h-6" />
-          </div>
-          <span className="font-bold text-2xl tracking-tight text-coffee-dark">
-            foreign coffee academy
-          </span>
+          <Image
+            src="/foreign-coffee-academy-playful-logo.png"
+            alt="Foreign Coffee Academy"
+            width={200}
+            height={48}
+            className="h-11 w-auto object-contain transition-transform group-hover:scale-105"
+            priority
+          />
         </Link>
       </div>
 
