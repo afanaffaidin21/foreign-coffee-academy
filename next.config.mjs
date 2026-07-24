@@ -1,13 +1,30 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   images: {
-    remotePatterns: [
+    domains: ["images.unsplash.com", "youtube-nocookie.com"],
+  },
+  async headers() {
+    return [
       {
-        protocol: "https",
-        hostname: "**",
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+        ],
       },
-    ],
+    ];
   },
 };
 
