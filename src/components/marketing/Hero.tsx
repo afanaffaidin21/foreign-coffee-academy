@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Play, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
+import { Sparkles, ArrowRight, Play, CheckCircle2, ShieldCheck, Zap, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
@@ -26,17 +26,18 @@ export function Hero() {
               Hubungkan teori ekstraksi, teknik manual brew, dan alur kerja coffee shop nyata melalui course, Coffee Guide, dan resep siap pakai berbahasa Indonesia.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs matched to Image 1 Button Style */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link href="/courses">
-                <Button size="lg" className="bg-coffee-accent text-white hover:bg-coffee-dark shadow-bento hover:shadow-bento-hover rounded-3xl">
+                <Button size="lg" className="bg-coffee-dark text-white hover:bg-coffee-accent rounded-full h-12 px-7 font-bold shadow-md transition-all">
                   <span>Mulai dari materi gratis</span>
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/belajar">
-                <Button size="lg" variant="outline" className="rounded-3xl border-coffee-border hover:border-coffee-accent">
-                  Lihat Alur Belajar
+                <Button size="lg" variant="outline" className="bg-white text-coffee-dark border-coffee-border hover:bg-coffee-card rounded-full h-12 px-7 font-bold transition-all">
+                  <span>Lihat Alur Belajar</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5 opacity-60" />
                 </Button>
               </Link>
             </div>
@@ -54,9 +55,9 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Hero Soft Bento Visual Column */}
+          {/* Hero Soft Bento Visual Column - Fixed High Contrast Rendering */}
           <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bento-card bg-white border-coffee-border">
+            <div className="bento-card bg-white border border-coffee-border text-coffee-dark shadow-sm">
               <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4">
                 <Play className="w-5 h-5 fill-amber-800" />
               </div>
@@ -66,7 +67,7 @@ export function Hero() {
               </p>
             </div>
 
-            <div className="bento-card bg-coffee-card border-coffee-border">
+            <div className="bento-card bg-coffee-card border border-coffee-border text-coffee-dark shadow-sm">
               <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4 font-bold text-lg">
                 V60
               </div>
@@ -76,12 +77,16 @@ export function Hero() {
               </p>
             </div>
 
-            <div className="sm:col-span-2 bento-card bg-coffee-dark text-coffee-cream">
-              <div className="flex items-center gap-2 text-xs font-semibold text-amber-400 mb-2">
-                <ShieldCheck className="w-4 h-4" />
-                <span>Komitmen Kredibilitas</span>
+            {/* High Contrast Dark Bento Card */}
+            <div className="sm:col-span-2 bento-card bg-coffee-dark text-white border border-coffee-dark shadow-lg shadow-coffee-dark/10 p-6 rounded-3xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Komitmen Kredibilitas</span>
+                </div>
+                <Quote className="w-5 h-5 text-amber-400/60" />
               </div>
-              <p className="text-sm font-medium leading-relaxed">
+              <p className="text-sm text-coffee-cream font-medium leading-relaxed">
                 "Bukan sekadar teori. Semua materi disusun dari alur kerja praktis Foreign Coffee untuk pengalaman seduh yang konsisten."
               </p>
             </div>

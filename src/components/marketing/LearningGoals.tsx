@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Flame, Droplets, Heart, Bean, UserCheck } from "lucide-react";
+import { ArrowRight, Flame, Droplets, Heart, Bean, UserCheck, Sparkles } from "lucide-react";
 
 export function LearningGoals() {
   const goals = [
@@ -10,7 +10,6 @@ export function LearningGoals() {
       description: "Pahami variabel grind size, dose, yield, dan waktu ekstraksi espresso yang konsisten.",
       icon: Flame,
       color: "bg-amber-100 text-amber-900 border-amber-200",
-      accent: "text-amber-700",
       lessonsCount: "8 Lesson",
     },
     {
@@ -19,7 +18,6 @@ export function LearningGoals() {
       description: "Kuasai rasio seduh, pouring technique, dan penyetelan acidity & sweetness.",
       icon: Droplets,
       color: "bg-orange-100 text-orange-900 border-orange-200",
-      accent: "text-orange-700",
       lessonsCount: "10 Lesson",
     },
     {
@@ -28,7 +26,6 @@ export function LearningGoals() {
       description: "Buihkan microfoam selemput sutra dan bentuk pola heart & tulip dasar.",
       icon: Heart,
       color: "bg-rose-100 text-rose-900 border-rose-200",
-      accent: "text-rose-700",
       lessonsCount: "6 Lesson",
     },
     {
@@ -37,7 +34,6 @@ export function LearningGoals() {
       description: "Kenali asal-usul origin, proses pasca-panen, dan tingkat sangrai kopi.",
       icon: Bean,
       color: "bg-emerald-100 text-emerald-900 border-emerald-200",
-      accent: "text-emerald-700",
       lessonsCount: "7 Lesson",
     },
     {
@@ -46,8 +42,15 @@ export function LearningGoals() {
       description: "Alur kerja standar coffee shop, kebersihan alat, dan komunikasi pelanggan.",
       icon: UserCheck,
       color: "bg-stone-100 text-stone-900 border-stone-200",
-      accent: "text-stone-700",
       lessonsCount: "12 Lesson",
+    },
+    {
+      slug: "sensory-tasting",
+      title: "Sensory & Tasting Kopi",
+      description: "Kembangkan kepekaan lidah, pahami cupping score, flavor wheel, dan deskripsi aroma.",
+      icon: Sparkles,
+      color: "bg-purple-100 text-purple-900 border-purple-200",
+      lessonsCount: "5 Lesson",
     },
   ];
 
@@ -72,25 +75,22 @@ export function LearningGoals() {
           </Link>
         </div>
 
-        {/* Bento Grid layout */}
+        {/* Balanced 3x2 Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {goals.map((goal, idx) => {
+          {goals.map((goal) => {
             const Icon = goal.icon;
-            const isLarge = idx === 0 || idx === 1;
             return (
               <Link
                 key={goal.slug}
                 href={`/belajar/${goal.slug}`}
-                className={`bento-card group flex flex-col justify-between ${
-                  isLarge ? "lg:col-span-1" : ""
-                }`}
+                className="bento-card bg-white border border-coffee-border flex flex-col justify-between group shadow-sm hover:shadow-bento hover:-translate-y-1 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${goal.color}`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-coffee-card text-coffee-muted">
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-coffee-card text-coffee-muted border border-coffee-light/40">
                       {goal.lessonsCount}
                     </span>
                   </div>

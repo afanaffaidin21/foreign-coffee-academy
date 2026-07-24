@@ -46,7 +46,7 @@ export function StarterPath() {
           {steps.map((item) => (
             <div
               key={item.step}
-              className="bg-white border border-coffee-border rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-bento transition-all"
+              className="bento-card bg-white border border-coffee-border flex flex-col justify-between shadow-sm hover:shadow-bento transition-all"
             >
               <div>
                 <div className="w-10 h-10 rounded-2xl bg-coffee-accent/10 text-coffee-accent font-extrabold flex items-center justify-center mb-5 text-sm">
@@ -69,9 +69,9 @@ export function StarterPath() {
 
         <div className="mt-12 text-center">
           <Link href="/courses">
-            <Button size="lg" className="bg-coffee-dark text-white hover:bg-coffee-accent rounded-3xl">
+            <Button size="lg" className="bg-coffee-dark text-white hover:bg-coffee-accent rounded-full h-12 px-8 font-bold shadow-md transition-all">
               <span>Mulai Alur Pemula Sekarang</span>
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { BookOpen, Layers, PlayCircle, ArrowRight } from "lucide-react";
+import { Layers, PlayCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function FeaturedCourses() {
@@ -47,7 +47,7 @@ export function FeaturedCourses() {
             </h2>
           </div>
           <Link href="/courses">
-            <Button variant="outline" className="rounded-2xl border-coffee-border">
+            <Button variant="outline" className="rounded-full bg-white border-coffee-border hover:bg-coffee-card text-coffee-dark font-semibold">
               <span>Lihat Semua Course</span>
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -58,19 +58,19 @@ export function FeaturedCourses() {
           {courses.map((course) => (
             <div
               key={course.slug}
-              className="bento-card bg-white border-coffee-border flex flex-col justify-between group"
+              className="bento-card bg-white border border-coffee-border flex flex-col justify-between group shadow-sm hover:shadow-bento transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-coffee-card text-coffee-dark border border-coffee-border">
                     {course.level}
                   </span>
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/50">
                     {course.freePreviews} Preview Gratis
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-coffee-dark mb-3 group-hover:text-coffee-accent transition-colors">
+                <h3 className="text-xl font-bold text-coffee-dark mb-3 group-hover:text-coffee-accent transition-colors leading-snug">
                   {course.title}
                 </h3>
 
@@ -92,7 +92,7 @@ export function FeaturedCourses() {
                 </div>
 
                 <Link href={`/courses/${course.slug}`}>
-                  <Button className="w-full justify-between rounded-2xl bg-coffee-dark text-white hover:bg-coffee-accent transition-colors">
+                  <Button className="w-full justify-between rounded-full bg-coffee-dark text-white hover:bg-coffee-accent transition-colors font-bold">
                     <span>Lihat Detail Course</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>

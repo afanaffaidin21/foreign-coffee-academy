@@ -47,7 +47,7 @@
 
 /* Custom Playful Micro-Interactions */
 .bento-card {
-  @apply bg-coffee-foam border border-coffee-light rounded-3xl p-6 transition-all duration-300 hover:shadow-bento-hover hover:-translate-y-1;
+  @apply rounded-3xl p-6 transition-all duration-300 hover:shadow-bento-hover hover:-translate-y-1;
 }
 
 .badge-playful {

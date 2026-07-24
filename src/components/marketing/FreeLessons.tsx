@@ -52,7 +52,7 @@ export function FreeLessons() {
           {freeLessons.map((lesson) => (
             <div
               key={lesson.lessonSlug}
-              className="bento-card bg-white border-coffee-border flex flex-col justify-between group"
+              className="bento-card bg-white border border-coffee-border flex flex-col justify-between group shadow-sm hover:shadow-bento transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -79,7 +79,7 @@ export function FreeLessons() {
               </div>
 
               <Link href={`/learn/${lesson.courseSlug}/${lesson.lessonSlug}`}>
-                <Button variant="outline" className="w-full justify-between rounded-2xl group-hover:bg-coffee-accent group-hover:text-white group-hover:border-coffee-accent transition-all">
+                <Button className="w-full justify-between rounded-full bg-coffee-dark text-white hover:bg-coffee-accent transition-all font-bold">
                   <span className="flex items-center gap-2">
                     <Play className="w-4 h-4 fill-current" />
                     <span>Tonton Lesson Gratis</span>
